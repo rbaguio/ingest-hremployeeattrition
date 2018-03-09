@@ -1,11 +1,11 @@
 # ingest-hremployeeattrition
 Ingest HR Employee Attrition by IBM Watson
 
-> | | |
-> |--:|:--|
-> | `author-name` | [IBM Watson](https://www.ibm.com/communities/analytics/watson-analytics-blog/guide-to-sample-datasets/)
-> | `data-source` | HR Employee Attrition |
-> | `data-files` | [`WA_Fn UseC_ HR Employee Attrition.csv`](https://community.watsonanalytics.com/wp-content/uploads/2015/03/WA_Fn-UseC_-HR-Employee-Attrition.csv) |
+| | |
+|--:|:--|
+| `author-name` | [IBM Watson](https://www.ibm.com/communities/analytics/watson-analytics-blog/guide-to-sample-datasets/)
+| `data-source` | HR Employee Attrition |
+| `data-files` | [`WA_Fn UseC_ HR Employee Attrition.csv`](https://community.watsonanalytics.com/wp-content/uploads/2015/03/WA_Fn-UseC_-HR-Employee-Attrition.csv) |
 
 > **Environment paths**
 >
@@ -20,7 +20,7 @@ Ingest HR Employee Attrition by IBM Watson
 | Document | Location |
 |:--|:--|
 | Raw data dictionary | [`data:///docs/IBM Watson - HR Employee Attrition data dictionary`](https://docs.google.com/document/d/1mEhNCV_y2L9-2_3Zht9-hIc2Ts26st50KFvIOC1IDQQ/edit?usp=sharing) |
-| Fabricated data dictionary | [`data:///docs/HR db`](https://docs.google.com/document/d/1zEPq1AugDTmH0Talx7ACLHrWa-q4JgotMNiIrMbWhqI/edit?usp=sharing) |
+| Fabricated data schema design | [`data:///docs/HR db`](https://docs.google.com/document/d/1zEPq1AugDTmH0Talx7ACLHrWa-q4JgotMNiIrMbWhqI/edit?usp=sharing) |
 
 ## Data files
 
