@@ -1,0 +1,19 @@
+# Ignore all files inside the data:// proxy...
+Data/**
+# ... except dummy files to commit directories
+!Data/.gitkeep
+
+# Local preview of README.md
+README.html
+
+# credentials for `googledrive::`
+**/.httr-oauth
+# Mac OS Finder config
+**/.DS_Store
+
+# Added automatically
+## RStudio
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
