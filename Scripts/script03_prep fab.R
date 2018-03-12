@@ -23,7 +23,7 @@ datastage.id <- drive_sub_id(datapath.id, "data")
 
 (data.files <- as_id(datastage.id) %>% drive_ls_from_id())
 
-## _data01_parsed ingest.rds ####
+## _data03_*.csv ####
 
 ### Download
 cache.file <- "data02_separated prefab.rds"
@@ -31,7 +31,7 @@ cachefile.id <- drive_sub_id(datastage.id, cache.file) # Get GDrive ID
 cachefile.path <- file.path(proxydata.path, cache.file) # Set proxy data:// path
 drive_download(as_id(cachefile.id), path = cachefile.path, overwrite = TRUE)
 
-### Load
+### Write to csv
 hr.ls <- readRDS(cachefile.path)
 
 pre.ls <- lapply(
@@ -50,3 +50,26 @@ pre.ls <- lapply(
 	}
 )
 pre.ls
+
+## __Download ####
+
+library(stringr)
+
+(data.files <- as_id(datastage.id) %>% drive_ls_from_id())
+
+csv.files <- data.files$name %>% 
+	str_subset("^data03_.+[.]csv")
+csv.id <- sapply(
+	csv.files,
+	function(temp.file) drive_sub_id(as_id(datastage.id), temp.file)
+)
+
+lapply(
+	names(csv.id),
+	function(temp.filename){
+		temp.id <- csv.id[temp.filename]
+		temp.file <- paste0("data03_", temp.filename) # already affixed w/ .csv
+		temp.path <- file.path(proxydata.path, temp.file)
+		drive_download(as_id(temp.id), temp.path, overwrite = TRUE)
+	}
+)
