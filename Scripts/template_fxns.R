@@ -4,6 +4,19 @@ unqSort <- function(x, ceil.n = 20){
 	return(unqSort.x)
 }
 
+countNA <- function(x) sum(is.na(x))
+
+theme_basic <- function(...){
+	require(ggplot2)
+	theme(
+		panel.background = element_blank(),
+		axis.line = element_line(colour = "black"),
+		strip.background = element_rect(colour = NA, fill = rgb(120, 124, 132, maxColorValue = 255)),
+		strip.text = element_text(colour = "white"),
+		...
+	)
+}
+
 drive_ls_from_id <- function(drive.id){
 	require(googledrive)
 	

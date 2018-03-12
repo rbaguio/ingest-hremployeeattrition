@@ -3,13 +3,15 @@
 library(googledrive)
 drive_auth()
 
-source("./Scripts/template_fxns.R")
+source("./Scripts/template_fxns.R") # RStudio
+# source("./template_fxns.R") # Jupyter
 
 ## data://
 datapath.id <- as_id("1hOHLPmvDvycpnxNYOMgIV5Z6uVcoSyuq")
 
 ## proxy data://
-proxydata.path <- file.path(".", "Data")
+proxydata.path <- file.path(".", "Data") # For RStudio
+# proxydata.path <- file.path("..", "Data") # For Jupyter
 
 ## Get IDs of raw data file dump and Data stage
 rawdump.id <- drive_sub_id(datapath.id, "raw")

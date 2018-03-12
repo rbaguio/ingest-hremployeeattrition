@@ -32,6 +32,12 @@ Ingest HR Employee Attrition by IBM Watson
 
 ### Fabricated
 
+#### Pre-fabrication
+
+Ingestion (parsing and cleaning) of raw data files.
+
 | Data name | Description | Data filepath | GDrive ID | Input data | Processing script |
 |:--|:--|:--|:--|:--|:--|
-| Raw ingest | Raw ingest of *HR Employee Attrition* | [`data:///data/data00_raw ingest.rds`](https://drive.google.com/open?id=1D3cyht8tytCJrbxEwxcBd_o1palVLD7l) |`1D3cyht8tytCJrbxEwxcBd_o1palVLD7l`| *HR Employee Attrition* | `script00_raw ingest.R` |
+| Raw ingest | Raw ingest of *HR Employee Attrition* | [`data:///data/data00_raw ingest.rds`](https://drive.google.com/open?id=1D3cyht8tytCJrbxEwxcBd_o1palVLD7l) |`1D3cyht8tytCJrbxEwxcBd_o1palVLD7l`| *HR Employee Attrition* raw | `script00_raw ingest.R` |
+| Parsed ingest | Parsed ingest of *HR Employee Attrition* | [`data:///data/data01_raw ingest.rds`](https://drive.google.com/open?id=1DN3gt-cV3xWUONNXpdQQy58mV4ksvCvm) |`1DN3gt-cV3xWUONNXpdQQy58mV4ksvCvm`| *HR Employee Attrition* raw ingest | `script01_clean ingest.ipynb` |
+| Separated raw data | Separated *HR Employee Attrition* datasets per table | [`data:///data/data01_raw ingest.rds`](https://drive.google.com/open?id=1gw9tDFMCwAfu7ifbEruaUc0mdOGNwbhQ) |`1gw9tDFMCwAfu7ifbEruaUc0mdOGNwbhQ`| *HR Employee Attrition* parsed ingest | `script02_prefab.R` |
