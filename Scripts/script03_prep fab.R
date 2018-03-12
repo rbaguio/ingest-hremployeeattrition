@@ -33,3 +33,20 @@ drive_download(as_id(cachefile.id), path = cachefile.path, overwrite = TRUE)
 
 ### Load
 hr.ls <- readRDS(cachefile.path)
+
+pre.ls <- lapply(
+	names(hr.ls),
+	function(temp.data){
+		temp.df <- hr.ls[[temp.data]]
+		temp.file <- paste0("data03_", temp.data, ".csv")
+		temp.path <- file.path(proxydata.path, temp.file)
+		write.csv(temp.df, file = temp.path, row.names = FALSE)
+		drive_upload(temp.path, as_id(datastage.id), temp.file)
+		file.entry <- c(
+			Datafile = temp.file,
+			GDrive.id = drive_sub_id(as_id(datastage.id), temp.file)
+		)
+		return(file.entry)
+	}
+)
+pre.ls
