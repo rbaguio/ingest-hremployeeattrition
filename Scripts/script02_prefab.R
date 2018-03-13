@@ -50,7 +50,7 @@ records.df <- hr.source %>%
 	) %>% 
 	select(EmployeeNumber, one_of(records.names), priorWorkXP)
 hr.source %<>% 
-	select(-one_of(records.names), -TotalWorkingYears, -DistanceFromHome)
+	select(-one_of(records.names), EducationField, -TotalWorkingYears, -DistanceFromHome)
 
 ## _Surveys ####
 
@@ -66,7 +66,7 @@ hr.source %<>% select(-one_of(survey.names))
 
 ## _Roles ####
 
-role.names <- c("Department", "JobLevel", "JobRole")
+role.names <- c("Department", "JobLevel", "JobRole", "EducationField")
 role.df <- hr.source %>% 
 	select(one_of(role.names)) %>% 
 	distinct() %>% 
@@ -104,7 +104,7 @@ hr.ls <- list(
 	Requests = request.df
 )
 
-separated.file <- "data02_separated prefab.rds"
+separated.file <- "data02u_separated prefab.rds"
 #### Save to proxy data://
 separated.filepath <- file.path(proxydata.path, separated.file)
 saveRDS(hr.ls, separated.filepath)
