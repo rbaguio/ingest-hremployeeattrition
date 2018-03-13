@@ -14,3 +14,10 @@ README.html
 .Ruserdata
 ## googledrive::
 .httr-oauth
+
+## Python
+.pyc
+
+## Sublime Projects
+.sublime-project
+.sublime-workspace
