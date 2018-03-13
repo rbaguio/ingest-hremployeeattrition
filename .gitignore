@@ -21,3 +21,6 @@ README.html
 ## Sublime Projects
 .sublime-project
 .sublime-workspace
+*.pyc
+hr-attrition.sublime-workspace
+hr-attrition.sublime-project
