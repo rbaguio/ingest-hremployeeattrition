@@ -68,8 +68,8 @@ lapply(
 	names(csv.id),
 	function(temp.filename){
 		temp.id <- csv.id[temp.filename]
-		temp.file <- paste0("data03_", temp.filename) # already affixed w/ .csv
-		temp.path <- file.path(proxydata.path, temp.file)
+		# temp.file <- paste0("data03_", temp.filename) # already affixed w/ .csv
+		temp.path <- file.path(proxydata.path, temp.filename)
 		drive_download(as_id(temp.id), temp.path, overwrite = TRUE)
 	}
 )
