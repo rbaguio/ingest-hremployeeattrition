@@ -3,7 +3,7 @@
 library(googledrive)
 drive_auth()
 
-source("./Scripts/template_fxns.R") # RStudio
+source("./scripts/template_fxns.R") # RStudio
 # source("./template_fxns.R") # Jupyter
 
 ## data://
