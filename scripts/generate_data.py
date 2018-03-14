@@ -20,6 +20,9 @@ hiring_promotion_list = [
 ]
 
 count_promotion_list = [
-    np.random.poisson(lamb * promotion_range) for promotion_range in
-    hiring_promotion_list
+    min(
+        level - 1,
+        np.random.poisson(lamb * promotion_range)
+    ) for level, promotion_range in
+    zip(e_records_df['JobLevel'], hiring_promotion_list)
 ]
