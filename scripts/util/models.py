@@ -1,3 +1,7 @@
+from util.initialize_data import roles_summary
+import numpy as np
+
+
 class Employee:
     employeenumber = ''
     gender = ''
@@ -16,6 +20,12 @@ class Employee:
     separated = ''
     salaryhike = ''
     roleid = ''
+    department = ''
+    subdepartment = ''
+    joblevel = ''
+    jobrole = ''
+    promotion_date = ''
+    hiring_date = ''
 
     def __init__(self, **kwargs):
         self.employeenumber = kwargs.get('employeenumber', None)
@@ -38,6 +48,66 @@ class Employee:
         self.separated = kwargs.get('separated', None)
         self.salaryhike = kwargs.get('salaryhike', None)
         self.roleid = kwargs.get('roleid', None)
+        self.department = kwargs.get('department', None)
+        self.subdepartment = kwargs.get('subdepartment', None)
+        self.joblevel = kwargs.get('joblevel', None)
+        self.jobrole = kwargs.get('jobrole', None)
+        self.hierarchy = int(roles_summary.loc[
+            (roles_summary['department'] == self.department) &
+            (roles_summary['jobrole'] == self.jobrole)
+        ]['hierarchy'])
+        self.promotion_date = kwargs.get('promotion_date', None)
+        self.hiring_date = kwargs.get('hiring_date', None)
+
+    def demote(self):
+        deducted_level = self.joblevel - 1
+        df = roles_summary.loc[
+            (roles_summary['min'] <= deducted_level) &
+            (roles_summary['max'] >= deducted_level) &
+            (roles_summary['subdepartment'] == self.subdepartment) &
+            (roles_summary['department'] == self.department) &
+            (roles_summary['hierarchy'] <= self.hierarchy)
+        ]
+
+        total = sum(df['jobrole'] != self.jobrole)
+
+        def compute_probability(row):
+            if self.joblevel == 5:
+                if row['jobrole'] == self.jobrole:
+                        return 0.9
+                else:
+                        return 0.1 / total
+
+            else:
+                if row['jobrole'] == self.jobrole:
+                        return 0.8
+                else:
+                        return 0.2 / total
+
+        return df
+
+
+
+        return df
+
+    def max_promotions(self):
+        current_role_min = roles_summary.loc[
+            (roles_summary['department'] == self.department) &
+            (roles_summary['jobrole'] == self.jobrole)
+        ]['min']
+
+        previous_promotion = sum(
+            roles_summary.loc[
+                (roles_summary['Department'] == self.department) &
+                (roles_summary['hierarchy'] < self.hierarchy)
+            ]['max']
+        )
+
+        print(self.joblevel)
+        print(current_role_promotion)
+        print(previous_promotion)
+
+        return int(current_role_promotion + previous_promotion)
 
 
 class Actions:

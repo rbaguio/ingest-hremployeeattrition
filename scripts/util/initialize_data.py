@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from dateutil.relativedelta import relativedelta
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime as dt
 from util.data import data_dir
 from calendar import monthrange
 
@@ -14,7 +14,7 @@ preactions_df = pd.read_csv(data_dir + 'data03_preAction.csv')
 e_records_df = pd.merge(
     profiles_df,
     preactions_df,
-    on='EmployeeNumber'
+    on=['EmployeeNumber', 'EducationField']
 )
 
 last_hire_date = date(2017, 12, 4)
@@ -24,15 +24,19 @@ count = len(e_records_df)
 
 
 def get_relative_date(years, datefrom, dow=0):
-    years_in_days = years * 365
-    random_delta_day = np.random.randint(
-        years_in_days - 91,
-        years_in_days + 91
-    )
+    years_diff = datefrom.year - years
+    first_day_of_dec = date(years_diff, 12, 1)
+    if first_day_of_dec.weekday() != 0:
+        last_hire_date_of_year = date(years_diff, 12, 1) + \
+            timedelta(days=(7 - first_day_of_dec.weekday()))
+    else:
+        last_hire_date_of_year = first_day_of_dec
 
-    est_date = datefrom - timedelta(days=random_delta_day)
+    day_delta = (last_hire_date_of_year - date(years_diff, 1, 1)).days
+    random_day = np.random.randint(1, day_delta)
+    est_date = dt.strptime(f'{random_day} {years_diff}', '%j %Y').date()
 
-    return min(datefrom, est_date - relativedelta(weekday=dow))
+    return est_date - relativedelta(weekday=dow)
 
 
 def randomize_termination(month, year=2017):
@@ -60,7 +64,7 @@ promotion_days = [
 
 hiring_date_list = [
     get_relative_date(year, termination_date) if termination_date
-    else get_relative_date(year, records_date) for year, termination_date in
+    else get_relative_date(year, last_hire_date) for year, termination_date in
     zip(e_records_df['YearsAtCompany'], termination_date_list)
 ]
 
