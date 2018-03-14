@@ -97,18 +97,14 @@ def get_relative_date(years, datefrom, dow=0):
     return est_date - relativedelta(weekday=dow)
 
 
-def randomize_termination(month, year=2017):
-    fday, day = monthrange(year, month)
-    return date(year, month, day)
-
-
-termination_date_list = [
-    randomize_termination(month) if separated else None
-    for month, separated in zip(
-        np.random.randint(10, 13, count),
-        e_records_df['Separated']
+def randomize_termination(hiring_date, year=2017):
+    day_start = max(
+        1,
+        (hiring_date - date(2017, 1, 1)).days
     )
-]
+    random_day = np.random.randint(day_start, 338)
+    return dt.strptime(f'{random_day} {year}', '%j %Y').date()
+
 
 promotion_date_list = [
     get_relative_date(year, records_date) for year in
@@ -121,10 +117,17 @@ promotion_days = [
 ]
 
 hiring_date_list = [
-    get_relative_date(year, termination_date) if termination_date
-    else get_relative_date(year, last_hire_date) for year, termination_date in
-    zip(e_records_df['YearsAtCompany'], termination_date_list)
+    get_relative_date(year, last_hire_date) for year in
+    e_records_df['YearsAtCompany']
 ]
 
+termination_date_list = [
+    randomize_termination(hiring_date) if separated else None
+    for hiring_date, separated in zip(
+        hiring_date_list,
+        e_records_df['Separated']
+    )
+]
 e_records_df['promotion_date'] = promotion_date_list
 e_records_df['hiring_date'] = hiring_date_list
+e_records_df['termination_date'] = termination_date_list
