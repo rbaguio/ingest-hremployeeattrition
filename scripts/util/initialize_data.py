@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 import numpy as np
 from dateutil.relativedelta import relativedelta
 from datetime import date, timedelta, datetime as dt
@@ -11,10 +12,67 @@ pd.set_option('display.expand_frame_repr', False)
 
 profiles_df = pd.read_csv(data_dir + 'data03_Profiles.csv')
 preactions_df = pd.read_csv(data_dir + 'data03_preAction.csv')
+roles_df = pd.read_csv(data_dir + 'data03_Roles.csv')
 e_records_df = pd.merge(
     profiles_df,
     preactions_df,
     on=['EmployeeNumber', 'EducationField']
+)
+
+roles_summary = roles_df.groupby(
+    ['Department', 'JobRole', 'JobLevel', 'RoleID']
+).count().reset_index().drop('EducationField', axis=1)
+
+hierarchy_dict = {
+    ('Human Resources', 'Human Resources'): 1,
+    ('Human Resources', 'Manager'): 2,
+    ('Research & Development', 'Laboratory Technician'): 1,
+    ('Research & Development', 'Research Scientist'): 2,
+    ('Research & Development', 'Research Director'): 3,
+    ('Research & Development', 'Manufacturing Director'): 3,
+    ('Research & Development', 'Healthcare Representative'): 3,
+    ('Research & Development', 'Manager'): 4,
+    ('Sales', 'Manager'): 3,
+    ('Sales', 'Sales Executive'): 2,
+    ('Sales', 'Sales Representative'): 1
+}
+
+subdepartment_dict = {
+    ('Human Resources', 'Human Resources'): 1,
+    ('Human Resources', 'Manager'): 1,
+    ('Research & Development', 'Laboratory Technician'): 1,
+    ('Research & Development', 'Research Scientist'): 1,
+    ('Research & Development', 'Research Director'): 1,
+    ('Research & Development', 'Manufacturing Director'): 2,
+    ('Research & Development', 'Healthcare Representative'): 2,
+    ('Research & Development', 'Manager'): 2,
+    ('Sales', 'Manager'): 1,
+    ('Sales', 'Sales Executive'): 1,
+    ('Sales', 'Sales Representative'): 1
+}
+
+roles_summary['hierarchy'] = roles_summary.transform(
+    lambda df: (df['Department'], df['JobRole']), axis=1
+).map(hierarchy_dict)
+
+roles_summary['subdepartment'] = roles_summary.transform(
+    lambda df: (df['Department'], df['JobRole']), axis=1
+).map(subdepartment_dict)
+
+roles_summary.columns = roles_summary.columns.str.lower()
+
+roles_df['hierarchy'] = roles_df.transform(
+    lambda df: (df['Department'], df['JobRole']), axis=1
+).map(hierarchy_dict)
+
+roles_df['subdepartment'] = roles_df.transform(
+    lambda df: (df['Department'], df['JobRole']), axis=1
+).map(subdepartment_dict)
+
+e_records_df = pd.merge(
+    e_records_df,
+    roles_df,
+    on=['EducationField', 'RoleID']
 )
 
 last_hire_date = date(2017, 12, 4)
