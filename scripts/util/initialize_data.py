@@ -131,3 +131,27 @@ termination_date_list = [
 e_records_df['promotion_date'] = promotion_date_list
 e_records_df['hiring_date'] = hiring_date_list
 e_records_df['termination_date'] = termination_date_list
+
+dept_names = ['hr', 'rd', 'rdcore', 'sales']
+
+transition_filenames = [
+    x for x in os.listdir(data_dir) if x.startswith('transition')
+]
+
+transition_dict = {
+    dept: pd.read_csv(data_dir + text, index_col=0)
+    for dept, text in zip(dept_names, transition_filenames)
+}
+
+for k, v in transition_dict.items():
+    v.index.name = 'From'
+    v.columns.name = 'To'
+
+transition_dir = {
+    'Sales': {1: 'sales'},
+    'Research & Development': {
+        1: 'rdcore',
+        2: 'rd'
+    },
+    'Human Resources': {1: 'hr'}
+}

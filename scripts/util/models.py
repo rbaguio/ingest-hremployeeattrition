@@ -1,4 +1,4 @@
-from util.initialize_data import roles_summary
+from util.initialize_data import *
 import numpy as np
 
 
@@ -55,59 +55,31 @@ class Employee:
         self.hierarchy = int(roles_summary.loc[
             (roles_summary['department'] == self.department) &
             (roles_summary['jobrole'] == self.jobrole)
-        ]['hierarchy'])
+        ]['hierarchy'].unique())
         self.promotion_date = kwargs.get('promotion_date', None)
         self.hiring_date = kwargs.get('hiring_date', None)
 
     def demote(self):
-        deducted_level = self.joblevel - 1
-        df = roles_summary.loc[
-            (roles_summary['min'] <= deducted_level) &
-            (roles_summary['max'] >= deducted_level) &
-            (roles_summary['subdepartment'] == self.subdepartment) &
-            (roles_summary['department'] == self.department) &
-            (roles_summary['hierarchy'] <= self.hierarchy)
-        ]
+        if self.joblevel == 1:
+            print("Can't be demoted. You prick!")
+        else:
+            key = transition_dir[self.department][self.subdepartment]
+            transition_mat = transition_dict[key]
+            demoted_text = np.random.choice(
+                a=transition_mat.index.tolist(),
+                p=transition_mat[self.roleid].values.tolist()
+            )
 
-        total = sum(df['jobrole'] != self.jobrole)
+            demoted_role = roles_summary.loc[
+                roles_summary['roleid'] == demoted_text
+            ]
 
-        def compute_probability(row):
-            if self.joblevel == 5:
-                if row['jobrole'] == self.jobrole:
-                        return 0.9
-                else:
-                        return 0.1 / total
-
-            else:
-                if row['jobrole'] == self.jobrole:
-                        return 0.8
-                else:
-                        return 0.2 / total
-
-        return df
-
-
-
-        return df
-
-    def max_promotions(self):
-        current_role_min = roles_summary.loc[
-            (roles_summary['department'] == self.department) &
-            (roles_summary['jobrole'] == self.jobrole)
-        ]['min']
-
-        previous_promotion = sum(
-            roles_summary.loc[
-                (roles_summary['Department'] == self.department) &
-                (roles_summary['hierarchy'] < self.hierarchy)
-            ]['max']
-        )
-
-        print(self.joblevel)
-        print(current_role_promotion)
-        print(previous_promotion)
-
-        return int(current_role_promotion + previous_promotion)
+            self.department = demoted_role.department.values[0]
+            self.jobrole = demoted_role.jobrole.values[0]
+            self.joblevel = demoted_role.joblevel.values[0]
+            self.roleid = demoted_role.roleid.values[0]
+            self.hierarchy = demoted_role.hierarchy.values[0]
+            self.subdepartment = demoted_role.subdepartment.values[0]
 
 
 class Actions:
