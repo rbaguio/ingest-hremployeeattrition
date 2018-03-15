@@ -146,5 +146,27 @@ class Employee:
 
             return demotion_action.to_series()
 
+    def demote_n(self, date_promoted, times):
+        if type(date_promoted) is not list:
+            raise AssertionError('date_promoted should be a list.')
+        if type(times) is not int:
+            raise AssertionError('Times should be an integer.')
+        if len(date_promoted) != times:
+            raise AssertionError(
+                'number of promotion dates should be equal to ' +
+                'number of promotions.'
+            )
 
+        if times > 5:
+            raise AssertionError(
+                'cannot be promoted more than 5 times.'
+            )
 
+        if times < 0:
+            raise AssertionError(
+                'cannot be negatively demoted/promoted.'
+            )
+        srs_list = []
+        for i, date in zip(range(times), date_promoted):
+            srs_list.append(self.demote(date))
+        return pd.DataFrame(srs_list)
