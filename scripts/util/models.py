@@ -102,7 +102,6 @@ class Employee:
                         f'Employee class does not have a/an {key} attribute.'
                     )
 
-    def demote(self):
     def demote(self, date_promoted):
         if self.joblevel == 1:
             print("Can't be demoted. You prick!")
@@ -116,7 +115,6 @@ class Employee:
 
             demoted_role = roles_summary.loc[
                 roles_summary['roleid'] == demoted_text
-            ]
             ].reset_index(drop=True)
 
             def random_salaryhike(role):
