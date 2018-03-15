@@ -160,3 +160,10 @@ transition_dir = {
 actions_df = pd.DataFrame()
 
 actions_df.to_csv(data_dir + 'actions_df.csv')
+
+
+salary_hike_dist = {}
+
+for name, group in e_records_df.groupby(['department', 'joblevel']):
+    srs = group['salaryhike'].value_counts(normalize=True).sort_index()
+    salary_hike_dist[name] = srs
