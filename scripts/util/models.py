@@ -28,6 +28,7 @@ class Employee:
     jobrole = ''
     promotion_date = ''
     hiring_date = ''
+    hierarchy = ''
 
     def __init__(self, *dat, **kwargs):
         for dict in dat:
