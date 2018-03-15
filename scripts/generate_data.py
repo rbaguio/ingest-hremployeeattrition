@@ -19,10 +19,14 @@ hiring_promotion_list = [
     zip(promotion_date_list, e_records_df.itertuples())
 ]
 
-count_promotion_list = [
-    min(
+count_promotion_dict = {
+    employee_number: min(
         level - 1,
         np.random.poisson(lamb * promotion_range)
-    ) for level, promotion_range in
-    zip(e_records_df['JobLevel'], hiring_promotion_list)
-]
+    ) for employee_number, level, promotion_range in
+    zip(
+        e_records_df['employeenumber'],
+        e_records_df['joblevel'],
+        hiring_promotion_list
+    )
+}
