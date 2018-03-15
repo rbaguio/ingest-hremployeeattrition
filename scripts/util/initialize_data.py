@@ -75,6 +75,8 @@ e_records_df = pd.merge(
     on=['EducationField', 'RoleID']
 )
 
+e_records_df.columns = e_records_df.columns.str.lower()
+
 last_hire_date = date(2017, 12, 4)
 records_date = date(2017, 12, 31)
 
@@ -108,7 +110,7 @@ def randomize_termination(hiring_date, year=2017):
 
 promotion_date_list = [
     get_relative_date(year, records_date) for year in
-    e_records_df['YearsSinceLastPromotion']
+    e_records_df['yearssincelastpromotion']
 ]
 
 promotion_days = [
@@ -118,14 +120,14 @@ promotion_days = [
 
 hiring_date_list = [
     get_relative_date(year, last_hire_date) for year in
-    e_records_df['YearsAtCompany']
+    e_records_df['yearsatcompany']
 ]
 
 termination_date_list = [
     randomize_termination(hiring_date) if separated else None
     for hiring_date, separated in zip(
         hiring_date_list,
-        e_records_df['Separated']
+        e_records_df['separated']
     )
 ]
 e_records_df['promotion_date'] = promotion_date_list
