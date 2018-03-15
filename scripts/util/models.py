@@ -15,7 +15,10 @@ class Actions:
     salary = ''
     roleto = ''
     rolefrom = ''
+    joblevelto = ''
+    joblevelfrom = ''
     department = ''
+    action_type = ''
 
     def __init__(self, *args, **kwargs):
         for dict in args:
@@ -128,10 +131,13 @@ class Employee:
             demotion_action = Actions(
                 date=date_promoted,
                 employeenumber=self.employeenumber,
-                roleto=demoted_role.jobrole.values[0],
-                rolefrom=self.jobrole,
+                roleto=self.jobrole,
+                rolefrom=demoted_role.jobrole.values[0],
+                joblevelto=self.joblevel,
+                joblevelfrom=demoted_role.joblevel.values[0],
                 department=self.department,
-                salary=self.salaryhike
+                salary=self.salaryhike,
+                action_type='promotion'
             )
 
             self.department = demoted_role.department.values[0]
