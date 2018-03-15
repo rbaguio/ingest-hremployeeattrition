@@ -156,3 +156,7 @@ transition_dir = {
     },
     'Human Resources': {1: 'hr'}
 }
+
+actions_df = pd.DataFrame()
+
+actions_df.to_csv(data_dir + 'actions_df.csv')
