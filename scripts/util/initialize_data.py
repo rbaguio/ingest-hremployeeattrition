@@ -4,7 +4,6 @@ import numpy as np
 from dateutil.relativedelta import relativedelta
 from datetime import date, timedelta, datetime as dt
 from util.data import data_dir
-from calendar import monthrange
 
 np.random.seed(2000)
 pd.set_option('display.max_rows', None)
@@ -130,7 +129,7 @@ termination_date_list = [
         e_records_df['separated']
     )
 ]
-e_records_df['promotion_date'] = promotion_date_list
+# e_records_df['promotion_date'] = promotion_date_list
 e_records_df['hiring_date'] = hiring_date_list
 e_records_df['termination_date'] = termination_date_list
 
