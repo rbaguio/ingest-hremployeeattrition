@@ -1,5 +1,5 @@
 from util.regression_promotion_days import lamb
-from util.initialize_data import e_records_df
+from util.initialize_data import e_records_df, promotion_date_list
 from datetime import timedelta
 import numpy as np
 
@@ -13,10 +13,10 @@ def hiring_promotion_diff(promotion_date, hiring_date):
 
 hiring_promotion_list = [
     (hiring_promotion_diff(
-        record.promotion_date,
+        promotion_date,
         record.hiring_date
-    )).days for record in
-    e_records_df.itertuples()
+    )).days for promotion_date, record in
+    zip(promotion_date_list, e_records_df.itertuples())
 ]
 
 count_promotion_list = [
