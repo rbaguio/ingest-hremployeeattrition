@@ -30,13 +30,23 @@ class Employee:
     hiring_date = ''
     hierarchy = ''
 
-    def __init__(self, *dat, **kwargs):
-        for dict in dat:
+    def __init__(self, *args, **kwargs):
+        for dict in args:
             for key in dict:
-                setattr(self, key, dict[key])
+                if hasattr(self, key):
+                    setattr(self, key, dict[key])
+                else:
+                    raise KeyError(
+                        f'Employee class does not have a/an {key} attribute.'
+                    )
 
         for key in kwargs:
-            setattr(self, key, kwargs[key])
+                if hasattr(self, key):
+                    setattr(self, key, kwargs[key])
+                else:
+                    raise KeyError(
+                        f'Employee class does not have a/an {key} attribute.'
+                    )
 
     def demote(self):
         if self.joblevel == 1:
@@ -61,6 +71,7 @@ class Employee:
             self.subdepartment = demoted_role.subdepartment.values[0]
 
 
+
 class Actions:
     date = ''
     actions_id = ''
@@ -69,9 +80,23 @@ class Actions:
     role = ''
     department = ''
 
-    def __init__(self):
-        None
+    def __init__(self, *args, **kwargs):
+        for dict in args:
+            for key in dict:
+                if hasattr(self, key):
+                    setattr(self, key, dict[key])
+                else:
+                    raise KeyError(
+                        f'Actions class does not have a/an {key} attribute.'
+                    )
 
+        for key in kwargs:
+                if hasattr(self, key):
+                    setattr(self, key, kwargs[key])
+                else:
+                    raise KeyError(
+                        f'Actions class does not have a/an {key} attribute.'
+                    )
 
 # class Hiring(Actions):
 
