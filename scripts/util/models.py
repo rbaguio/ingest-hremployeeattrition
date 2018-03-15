@@ -103,6 +103,7 @@ class Employee:
                     )
 
     def demote(self):
+    def demote(self, date_promoted):
         if self.joblevel == 1:
             print("Can't be demoted. You prick!")
         else:
@@ -116,6 +117,24 @@ class Employee:
             demoted_role = roles_summary.loc[
                 roles_summary['roleid'] == demoted_text
             ]
+            ].reset_index(drop=True)
+
+            def random_salaryhike(role):
+                dist = salary_hike_dist[(
+                    role.department.values[0],
+                    role.joblevel.values[0]
+                )]
+
+                return np.random.choice(dist.index, p=dist.values)
+
+            demotion_action = Actions(
+                date=date_promoted,
+                employeenumber=self.employeenumber,
+                roleto=demoted_role.jobrole.values[0],
+                rolefrom=self.jobrole,
+                department=self.department,
+                salary=self.salaryhike
+            )
 
             self.department = demoted_role.department.values[0]
             self.jobrole = demoted_role.jobrole.values[0]
@@ -123,5 +142,9 @@ class Employee:
             self.roleid = demoted_role.roleid.values[0]
             self.hierarchy = demoted_role.hierarchy.values[0]
             self.subdepartment = demoted_role.subdepartment.values[0]
+            self.salaryhike = random_salaryhike(demoted_role)
+
+            return demotion_action.to_series()
+
 
 
