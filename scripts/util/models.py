@@ -1,7 +1,61 @@
-from util.initialize_data import *
+from util.initialize_data import transition_dir, transition_dict,\
+    roles_summary, salary_hike_dist, e_records_df
+
 import numpy as np
+import pandas as pd
 
 np.random.seed(2000)
+
+
+class Actions:
+    date = ''
+    actions_id = ''
+    supervisornumber = ''
+    employeenumber = ''
+    salary = ''
+    roleto = ''
+    rolefrom = ''
+    department = ''
+
+    def __init__(self, *args, **kwargs):
+        for dict in args:
+            for key in dict:
+                if hasattr(self, key):
+                    setattr(self, key, dict[key])
+                else:
+                    raise KeyError(
+                        f'Actions class does not have a/an {key} attribute.'
+                    )
+
+        for key in kwargs:
+                if hasattr(self, key):
+                    setattr(self, key, kwargs[key])
+                else:
+                    raise KeyError(
+                        f'Actions class does not have a/an {key} attribute.'
+                    )
+
+    def to_series(self):
+        return pd.Series({key: value for key, value in self.__dict__.items()})
+
+
+# class Hiring(Actions):
+
+
+# class Termination(Actions):
+
+
+# class Promotion(Actions):
+
+
+# class Transfer(Actions):
+
+
+class Requests:
+    request_id = ''
+    employee_id = ''
+    role = ''
+    requested = ''
 
 
 class Employee:
@@ -71,47 +125,3 @@ class Employee:
             self.subdepartment = demoted_role.subdepartment.values[0]
 
 
-
-class Actions:
-    date = ''
-    actions_id = ''
-    report_employee_id = ''
-    salary = ''
-    role = ''
-    department = ''
-
-    def __init__(self, *args, **kwargs):
-        for dict in args:
-            for key in dict:
-                if hasattr(self, key):
-                    setattr(self, key, dict[key])
-                else:
-                    raise KeyError(
-                        f'Actions class does not have a/an {key} attribute.'
-                    )
-
-        for key in kwargs:
-                if hasattr(self, key):
-                    setattr(self, key, kwargs[key])
-                else:
-                    raise KeyError(
-                        f'Actions class does not have a/an {key} attribute.'
-                    )
-
-# class Hiring(Actions):
-
-
-# class Termination(Actions):
-
-
-# class Promotion(Actions):
-
-
-# class Transfer(Actions):
-
-
-class Requests:
-    request_id = ''
-    employee_id = ''
-    role = ''
-    requested = ''
