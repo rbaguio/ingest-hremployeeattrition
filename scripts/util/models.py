@@ -1,10 +1,10 @@
 from util.initialize_data import transition_dir, transition_dict,\
-    roles_summary, salary_hike_dist, e_records_df
+    roles_summary, salary_hike_dist, seed
 
 import numpy as np
 import pandas as pd
 
-np.random.seed(2000)
+np.random.seed(seed)
 
 
 class Actions:
@@ -108,47 +108,53 @@ class Employee:
     def demote(self, date_promoted):
         if self.joblevel == 1:
             print("Can't be demoted. You prick!")
+
+            return pd.Series()
         else:
             key = transition_dir[self.department][self.subdepartment]
             transition_mat = transition_dict[key]
-            demoted_text = np.random.choice(
-                a=transition_mat.index.tolist(),
-                p=transition_mat[self.roleid].values.tolist()
-            )
 
-            demoted_role = roles_summary.loc[
-                roles_summary['roleid'] == demoted_text
-            ].reset_index(drop=True)
+            if sum(transition_mat[self.roleid].values.tolist()) == 1:
+                demoted_text = np.random.choice(
+                    a=transition_mat.index.tolist(),
+                    p=transition_mat[self.roleid].values.tolist()
+                )
 
-            def random_salaryhike(role):
-                dist = salary_hike_dist[(
-                    role.department.values[0],
-                    role.joblevel.values[0]
-                )]
+                demoted_role = roles_summary.loc[
+                    roles_summary['roleid'] == demoted_text
+                ].reset_index(drop=True)
 
-                return np.random.choice(dist.index, p=dist.values)
+                def random_salaryhike(role):
+                    dist = salary_hike_dist[(
+                        role.department.values[0],
+                        role.joblevel.values[0]
+                    )]
 
-            demotion_action = Actions(
-                date=date_promoted,
-                employeenumber=self.employeenumber,
-                roleto=self.jobrole,
-                rolefrom=demoted_role.jobrole.values[0],
-                joblevelto=self.joblevel,
-                joblevelfrom=demoted_role.joblevel.values[0],
-                department=self.department,
-                salary=self.salaryhike,
-                action_type='promotion'
-            )
+                    return np.random.choice(dist.index, p=dist.values)
 
-            self.department = demoted_role.department.values[0]
-            self.jobrole = demoted_role.jobrole.values[0]
-            self.joblevel = demoted_role.joblevel.values[0]
-            self.roleid = demoted_role.roleid.values[0]
-            self.hierarchy = demoted_role.hierarchy.values[0]
-            self.subdepartment = demoted_role.subdepartment.values[0]
-            self.salaryhike = random_salaryhike(demoted_role)
+                demotion_action = Actions(
+                    date=date_promoted,
+                    employeenumber=self.employeenumber,
+                    roleto=self.jobrole,
+                    rolefrom=demoted_role.jobrole.values[0],
+                    joblevelto=self.joblevel,
+                    joblevelfrom=demoted_role.joblevel.values[0],
+                    department=self.department,
+                    salary=self.salaryhike,
+                    action_type='promotion'
+                )
 
-            return demotion_action.to_series()
+                self.department = demoted_role.department.values[0]
+                self.jobrole = demoted_role.jobrole.values[0]
+                self.joblevel = demoted_role.joblevel.values[0]
+                self.roleid = demoted_role.roleid.values[0]
+                self.hierarchy = demoted_role.hierarchy.values[0]
+                self.subdepartment = demoted_role.subdepartment.values[0]
+                self.salaryhike = random_salaryhike(demoted_role)
+
+                return demotion_action.to_series()
+            else:
+                return pd.Series()
 
     def demote_n(self, date_promoted, times):
         if type(date_promoted) is not list:
@@ -172,5 +178,9 @@ class Employee:
             )
         srs_list = []
         for i, date in zip(range(times), date_promoted):
-            srs_list.append(self.demote(date))
+            srs = self.demote(date)
+            if not srs.empty:
+                srs_list.append(srs)
+
+        # print(srs_list)
         return pd.DataFrame(srs_list)

@@ -5,7 +5,8 @@ from dateutil.relativedelta import relativedelta
 from datetime import date, timedelta, datetime as dt
 from util.data import data_dir
 
-np.random.seed(2000)
+seed = 2000
+np.random.seed(seed)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.expand_frame_repr', False)
 
@@ -107,14 +108,14 @@ def randomize_termination(hiring_date, year=2017):
     return dt.strptime(f'{random_day} {year}', '%j %Y').date()
 
 
-promotion_date_list = [
+last_promotion_date_list = [
     get_relative_date(year, records_date) for year in
     e_records_df['yearssincelastpromotion']
 ]
 
 promotion_days = [
     (records_date - date).days
-    for date in promotion_date_list
+    for date in last_promotion_date_list
 ]
 
 hiring_date_list = [
@@ -129,7 +130,7 @@ termination_date_list = [
         e_records_df['separated']
     )
 ]
-# e_records_df['promotion_date'] = promotion_date_list
+# e_records_df['promotion_date'] = last_promotion_date_list
 e_records_df['hiring_date'] = hiring_date_list
 e_records_df['termination_date'] = termination_date_list
 
