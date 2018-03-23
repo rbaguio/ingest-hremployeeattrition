@@ -4,6 +4,7 @@ import numpy as np
 from dateutil.relativedelta import relativedelta
 from datetime import date, timedelta, datetime as dt
 from util.data import data_dir
+from calendar import isleap
 
 seed = 2000
 np.random.seed(seed)
@@ -102,9 +103,10 @@ def get_relative_date(years, datefrom, dow=0):
 def randomize_termination(hiring_date, year=2017):
     day_start = max(
         1,
-        (hiring_date - date(2017, 1, 1)).days
+        (hiring_date - date(year, 1, 1)).days
     )
-    random_day = np.random.randint(day_start, 338)
+    day_end = 366 if isleap(year) else 365
+    random_day = np.random.randint(day_start + 1, day_end)
     return dt.strptime(f'{random_day} {year}', '%j %Y').date()
 
 

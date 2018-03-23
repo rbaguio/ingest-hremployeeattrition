@@ -1,6 +1,4 @@
-from util.initialize_data import transition_dir, transition_dict,\
-    roles_summary, salary_hike_dist, seed
-
+from util.initialize_data import *
 import numpy as np
 import pandas as pd
 
@@ -62,32 +60,33 @@ class Requests:
 
 
 class Employee:
-    employeenumber = ''
-    gender = ''
-    age = ''
-    maritalstatus = ''
-    education = ''
-    educationfield = ''
-    numcompaniesworked = ''
-    priorworkxp = ''
-    monthlyincome = ''
-    stockoptionlevel = ''
-    yearsatcompany = ''
-    yearsincurrentrole = ''
-    yearssincelastpromotion = ''
-    yearswithcurrmanager = ''
-    separated = ''
-    salaryhike = ''
-    roleid = ''
-    department = ''
-    subdepartment = ''
-    joblevel = ''
-    jobrole = ''
-    promotion_date = ''
-    hiring_date = ''
-    hierarchy = ''
-
     def __init__(self, *args, **kwargs):
+        self.employeenumber = ''
+        self.gender = ''
+        self.age = ''
+        self.maritalstatus = ''
+        self.education = ''
+        self.educationfield = ''
+        self.numcompaniesworked = ''
+        self.priorworkxp = ''
+        self.monthlyincome = ''
+        self.stockoptionlevel = ''
+        self.yearsatcompany = ''
+        self.yearsincurrentrole = ''
+        self.yearssincelastpromotion = ''
+        self.yearswithcurrmanager = ''
+        self.separated = ''
+        self.salaryhike = ''
+        self.roleid = ''
+        self.department = ''
+        self.subdepartment = ''
+        self.joblevel = ''
+        self.jobrole = ''
+        self.promotion_date = ''
+        self.hiring_date = ''
+        self.termination_date = ''
+        self.hierarchy = ''
+
         for dict in args:
             for key in dict:
                 if hasattr(self, key):
@@ -184,3 +183,37 @@ class Employee:
 
         # print(srs_list)
         return pd.DataFrame(srs_list)
+
+    def randomize(self, df=e_records_df, yearsfrom=2017):
+        for key in df.columns:
+            if key not in ['hiring_date', 'termination_date', 'promotion_date']:
+                if hasattr(self, key):
+                    setattr(self, key, np.random.choice(
+                        a=df[key].value_counts(
+                            normalize=True).sort_index().index,
+                        p=df[key].value_counts(
+                            normalize=True).sort_index().values
+                    ))
+
+        self.hiring_date = get_relative_date(
+            self.yearsatcompany,
+            date(yearsfrom, 12, 31)
+        )
+
+        print(self.hiring_date)
+
+        self.termination_date = randomize_termination(
+            self.hiring_date,
+            yearsfrom
+        )
+
+        print(self.termination_date)
+
+        print('An Employee was just randomly generated!')
+        if self.termination_date < self.hiring_date:
+            input('ERROR!!!')
+
+        return self
+
+    def to_series(self):
+        return pd.Series({key: value for key, value in self.__dict__.items()})
