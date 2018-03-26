@@ -4,6 +4,24 @@ import pandas as pd
 
 np.random.seed(seed)
 
+department_dict = {
+    'Sls': 'Sales',
+    'R&D': 'Research & Development',
+    'HmR': 'Human Resources',
+}
+
+role_dict = {
+    'hmnr': 'Human Resources',
+    'mngr': 'Manager',
+    'lbrt': 'Laboratory Technician',
+    'rsrs': 'Research Scientist',
+    'hltr': 'Healthcare Representative',
+    'mnfd': 'Manufacturing Director',
+    'rsrd': 'Research Director',
+    'slsr': 'Sales Representative',
+    'slse': 'Sales Executive',
+}
+
 
 class Actions:
     date = ''
@@ -19,6 +37,18 @@ class Actions:
     action_type = ''
 
     def __init__(self, *args, **kwargs):
+        self.date = ''
+        self.actions_id = ''
+        self.supervisornumber = ''
+        self.employeenumber = ''
+        self.salary = ''
+        self.roleto = ''
+        self.rolefrom = ''
+        self.joblevelto = ''
+        self.joblevelfrom = ''
+        self.department = ''
+        self.action_type = ''
+
         for dict in args:
             for key in dict:
                 if hasattr(self, key):
@@ -186,7 +216,7 @@ class Employee:
 
     def randomize(self, df=e_records_df, yearsfrom=2017):
         for key in df.columns:
-            if key not in ['hiring_date', 'termination_date', 'promotion_date']:
+            if key not in ['hiring_date', 'termination_date', 'promotion_date', 'department', 'subdepartment', 'jobrole', 'joblevel', 'hierarchy']:
                 if hasattr(self, key):
                     setattr(self, key, np.random.choice(
                         a=df[key].value_counts(
@@ -200,13 +230,19 @@ class Employee:
             date(yearsfrom, 12, 31)
         )
 
-        print(self.hiring_date)
+        role_id_split = self.roleid.split('-')
 
+        self.department = department_dict[role_id_split[0]]
+        self.joblevel = int(role_id_split[1])
+        self.jobrole = role_dict[role_id_split[2]]
+        self.subdepartment = subdepartment_dict[(self.department, self.jobrole)]
+        self.hierarchy = hierarchy_dict[(self.department, self.jobrole)]
         self.termination_date = randomize_termination(
             self.hiring_date,
             yearsfrom
         )
 
+        print(self.hiring_date)
         print(self.termination_date)
 
         print('An Employee was just randomly generated!')
